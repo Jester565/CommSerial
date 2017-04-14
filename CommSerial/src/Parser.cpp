@@ -7,26 +7,34 @@ namespace comser {
 		:recvBufferSize(0)
 	{
 		recvBuffer = new uint8_t[MAX_RECV_SIZE];
-		sendSizeBuffer = new uint8_t[SIZE_BYTES];
+		sendHeaderBuffer = new uint8_t[HEADER_BYTES];
 		int num = 1;
 		littleEndian = (*(char *)&num == 1);
+		crc = new Crc();
 	}
 
 	int Parser::Write(Serial* serial, const std::vector<uint8_t>& data)
 	{
-		uint16_t totalDataSize = data.size() + SIZE_BYTES;
+		CrcInt dataCRC = crc->GenCRC(data.data(), data.size());
+		uint16_t totalDataSize = data.size() + SIZE_BYTES + CRC_WIDTH;
 		if (littleEndian) {
 			for (int i = 0; i < SIZE_BYTES; i++) {
-				sendSizeBuffer[SIZE_BYTES - i - 1] = (totalDataSize >> (8 * i)) & 0xff;
+				sendHeaderBuffer[SIZE_BYTES - i - 1] = (totalDataSize >> (8 * i)) & 0xff;
+			}
+			for (int i = 0; i < CRC_WIDTH; i++) {
+				sendHeaderBuffer[HEADER_BYTES - i - 1] = ((dataCRC) >> (8 * i)) & 0xff;
 			}
 		}
 		else
 		{
 			for (int i = 0; i < SIZE_BYTES; i++) {
-				sendSizeBuffer[i] = (totalDataSize >> (8 * i)) & 0xff;
+				sendHeaderBuffer[i] = (totalDataSize >> (8 * i)) & 0xff;
+			}
+			for (int i = 0; i < CRC_WIDTH; i++) {
+				sendHeaderBuffer[i + SIZE_BYTES] = ((dataCRC) >> (8 * i)) & 0xff;
 			}
 		}
-		int writeStatus = serial->Write(sendSizeBuffer, SIZE_BYTES);
+		int writeStatus = serial->Write(sendHeaderBuffer, HEADER_BYTES);
 		if (writeStatus <= 0) {
 			return writeStatus;
 		}
@@ -65,16 +73,45 @@ namespace comser {
 			}
 			recvBufferSize += recvSize;
 			if (recvBufferSize == totalDataSize) {
-				data.insert(data.end(), &recvBuffer[SIZE_BYTES], &recvBuffer[recvBufferSize]);
-				recvBufferSize = 0;
-				return totalDataSize - SIZE_BYTES;
+				if (CheckCrc()) {
+					data.insert(data.end(), &recvBuffer[HEADER_BYTES], &recvBuffer[recvBufferSize]);
+					recvBufferSize = 0;
+					return totalDataSize - SIZE_BYTES;
+				}
+				else
+				{
+					std::cerr << "INVALID CRC!" << std::endl;
+					recvBufferSize = 0;
+				}
 			}
-			
 		}
 		return 0;
 	}
 
 	Parser::~Parser()
 	{
+	}
+	bool Parser::CheckCrc()
+	{
+		if (recvBufferSize < HEADER_BYTES) {
+			return false;
+		}
+		else
+		{
+			CrcInt dataCRC = crc->GenCRC(&recvBuffer[HEADER_BYTES], recvBufferSize - HEADER_BYTES);
+			CrcInt sentCRC = 0;
+			if (littleEndian) {
+				for (int i = 0; i < CRC_WIDTH; i++) {
+					sentCRC |= (recvBuffer[HEADER_BYTES - i - 1] & 0xff) << (8 * i);
+				}
+			}
+			else
+			{
+				for (int i = 0; i < CRC_WIDTH; i++) {
+					sentCRC |= (recvBuffer[i] & 0xff) << (8 * i);
+				}
+			}
+			return dataCRC == sentCRC;
+		}
 	}
 }
