@@ -1,32 +1,45 @@
 #pragma once
 #include <string>
+#include <vector>
 
-class Serial
-{
-public:
-	Serial()
-		:open(false)
+namespace comser {
+
+	static const uint32_t BAUDRATE = 57600;
+	static const uint32_t BYTE_SIZE = 8;
+	static const uint32_t STOP_BIT = 0;
+	static const uint32_t PARITY = 0;
+
+	static const uint32_t READ_INTERVAL_TIMEOUT = 50;
+	static const uint32_t READ_TOTAL_TIMEOUT = 50;
+	static const uint32_t READ_TOTAL_TIMEOUT_MULTIPLIER = 50;
+	static const uint32_t WRITE_TOTAL_TIMEOUT_CONSTANT = 50;
+	static const uint32_t WRITE_TOTAL_TIMEOUT_MULTIPLIER = 10;
+
+	class Serial
 	{
+	public:
+		Serial()
+			:open(false)
+		{
 
-	}
-	virtual bool Open(const std::string& portName) = 0;
+		}
+		virtual bool Open(const std::string& portName) = 0;
 
-	virtual int Write(const uint8_t* data, uint16_t size) = 0;
+		virtual int Write(const uint8_t* data, uint16_t size) = 0;
 
-	virtual int Read(uint8_t* data, uint16_t maxSize) = 0;
+		virtual int Read(uint8_t* data, uint16_t maxSize) = 0;
 
-	virtual int Read(uint8_t* data, uint16_t maxSize, uint16_t& size) = 0;
+		virtual int Read(uint8_t* data, uint16_t maxSize, uint16_t& size) = 0;
 
-	virtual bool IsOpen() {
-		return open;
-	}
+		virtual bool IsOpen() {
+			return open;
+		}
 
-	virtual bool Close() = 0;
+		virtual bool Close() = 0;
 
-	virtual ~Serial() {
+		virtual ~Serial() { }
 
-	}
-
-protected:
-	bool open;
-};
+	protected:
+		bool open;
+	};
+}

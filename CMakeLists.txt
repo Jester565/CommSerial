@@ -11,12 +11,19 @@ include_directories(SYSTEM ${HEADER_DIR})
 set(CS_HEADERS
 	${HEADER_DIR}/Parser.h
 	${HEADER_DIR}/Serial.h
-	${HEADER_DIR}/WinSerial.h)
+	${HEADER_DIR}/WinSerial.h
+	${HEADER_DIR}/Crc.h
+	${HEADER_DIR}/LinSerial.h
+	${HEADER_DIR}/SerialConnection.h
+	${HEADER_DIR}/ConditionVariable.h)
 	
 set(CS_SOURCES
 	${SOURCE_DIR}/Parser.cpp
 	${SOURCE_DIR}/Source.cpp
-	${SOURCE_DIR}/WinSerial.cpp)
+	${SOURCE_DIR}/WinSerial.cpp
+	${SOURCE_DIR}/Crc.cpp
+	${SOURCE_DIR}/LinSerial.cpp
+	${SOURCE_DIR}/SerialConnection.cpp)
 	
 if (WIN32)
 	if (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
