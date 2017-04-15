@@ -47,7 +47,7 @@ namespace comser {
 		sendThread = nullptr;
 	}
 
-	void SerialConnection::Send(std::vector<uint8_t>& data)
+	void SerialConnection::Send(const std::string& data)
 	{
 		sendQueueMutex.lock();
 		sendQueue.push(data);
@@ -63,7 +63,7 @@ namespace comser {
 	void SerialConnection::SendRun()
 	{
 		while (running) {
-			std::vector<uint8_t> data;
+			std::string data;
 			bool send = false;
 			bool empty = true;
 			sendQueueMutex.lock();
@@ -90,7 +90,7 @@ namespace comser {
 	void SerialConnection::RecvRun()
 	{
 		while (running) {
-			std::vector<uint8_t> data;
+			std::string data;
 			int readVal = parser->Read(serial, data);
 			if (readVal < 0) {
 				errHandler(readVal);

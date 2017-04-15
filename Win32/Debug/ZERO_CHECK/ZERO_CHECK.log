@@ -1,18 +1,2 @@
 ﻿  Checking Build System
-  CMake is re-running because C:/Users/ajcra/Desktop/NGCP/CommSerial/build/CMakeFiles/generate.stamp is out-of-date.
-    the file 'C:/Users/ajcra/Desktop/NGCP/CommSerial/CMakeLists.txt'
-    is newer than 'C:/Users/ajcra/Desktop/NGCP/CommSerial/build/CMakeFiles/generate.stamp.depend'
-    result='-1'
-  CMake Warning (dev) at CMakeLists.txt:29 (if):
-    Policy CMP0054 is not set: Only interpret if() arguments as variables or
-    keywords when unquoted.  Run "cmake --help-policy CMP0054" for policy
-    details.  Use the cmake_policy command to set the policy and suppress this
-    warning.
-  
-    Quoted variables like "MSVC" will no longer be dereferenced when the policy
-    is set to NEW.  Since the policy is not set the OLD behavior will be used.
-  This warning is for project developers.  Use -Wno-dev to suppress it.
-  
-  -- Configuring done
-  -- Generating done
-  -- Build files have been written to: C:/Users/ajcra/Desktop/NGCP/CommSerial/build
+  CMake does not need to re-run because C:/Users/ajcra/Desktop/NGCP/CommSerial/build/CMakeFiles/generate.stamp is up-to-date.

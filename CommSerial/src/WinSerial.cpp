@@ -17,6 +17,7 @@ namespace comser {
 			return false;
 		}
 
+		
 		DCB serialParams = { 0 };
 		serialParams.DCBlength = sizeof(serialParams);
 		GetCommState(hComm, &serialParams);
@@ -39,6 +40,7 @@ namespace comser {
 			std::cerr << "Could not set serial timeouts" << std::endl;
 			Close();
 		}
+		
 		open = true;
 		return true;
 	}

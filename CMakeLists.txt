@@ -12,16 +12,13 @@ set(CS_HEADERS
 	${HEADER_DIR}/Parser.h
 	${HEADER_DIR}/Serial.h
 	${HEADER_DIR}/WinSerial.h
-	${HEADER_DIR}/Crc.h
 	${HEADER_DIR}/LinSerial.h
 	${HEADER_DIR}/SerialConnection.h
 	${HEADER_DIR}/ConditionVariable.h)
 	
 set(CS_SOURCES
 	${SOURCE_DIR}/Parser.cpp
-	${SOURCE_DIR}/Source.cpp
 	${SOURCE_DIR}/WinSerial.cpp
-	${SOURCE_DIR}/Crc.cpp
 	${SOURCE_DIR}/LinSerial.cpp
 	${SOURCE_DIR}/SerialConnection.cpp)
 	
@@ -38,7 +35,16 @@ set(CS_GLOB
 	${CS_HEADERS}
 	${CS_SOURCES})
 
-add_executable(${PROJECT_NAME} ${CS_GLOB})
+
+add_library(${PROJECT_NAME} STATIC ${CS_GLOB})
+
+set(TEST_NAME ComSerTest)
+
+set(TEST_SOURCES
+	${CMAKE_CURRENT_SOURCE_DIR}/Test/Source.cpp)
+
+add_executable(${TEST_NAME} ${TEST_SOURCES})
+target_link_libraries(${TEST_NAME} ${PROJECT_NAME})
 
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 11)
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD_REQUIRED 11)

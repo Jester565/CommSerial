@@ -2,7 +2,7 @@
 #include <vector>
 #include <cstdint>
 #include <memory>
-#include "Crc.h"
+#include <queue>
 
 namespace comser {
 	class Serial;
@@ -11,26 +11,22 @@ namespace comser {
 	class Parser
 	{
 	public:
-		static const uint8_t SIZE_BYTES = 2;
-		typedef uint16_t SizeInt;
-		static const SizeInt MAX_RECV_SIZE = 1024;
-		static const uint8_t CRC_SIZE_BYTES = 1;
-		static const uint8_t HEADER_BYTES = SIZE_BYTES + CRC_WIDTH;
+		static const char TERMINUS = ';';
+		static const uint16_t MAX_RECV_SIZE = 15;
+		static const uint16_t BUFFER_MOVE_SIZE = 10;
 
 		Parser();
 
-		int Write(Serial*, const std::vector<uint8_t>& data);
+		int Write(Serial*, const std::string& data);
 
-		int Read(Serial*, std::vector<uint8_t>& data);
+		int Read(Serial*, std::string& data);
 
 		~Parser();
 
 	private:
-		bool CheckCrc();
-		SizeInt recvBufferSize;
+		uint16_t recvBufferStart;
+		uint16_t recvBufferEnd;
 		uint8_t* recvBuffer;
-		uint8_t* sendHeaderBuffer;
-		Crc* crc;
-		bool littleEndian;
+		std::queue<std::string> recvQueue;
 	};
 }

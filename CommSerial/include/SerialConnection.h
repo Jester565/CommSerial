@@ -12,7 +12,7 @@ namespace comser {
 	class Serial;
 	class Parser;
 
-	typedef std::function<void(std::vector<uint8_t>&)> RecvHandler;
+	typedef std::function<void(std::string)> RecvHandler;
 	typedef std::function<void(int)> ErrHandler;
 	class SerialConnection : public std::enable_shared_from_this<SerialConnection> {
 	public:
@@ -29,7 +29,7 @@ namespace comser {
 			this->errHandler = errHandler;
 		}
 
-		void Send(std::vector<uint8_t>& data);
+		void Send(const std::string& data);
 
 		void DefaultErrHandler(int err);
 
@@ -37,7 +37,7 @@ namespace comser {
 	protected:
 		Serial* serial;
 		Parser* parser;
-		std::queue<std::vector<uint8_t>> sendQueue;
+		std::queue<std::string> sendQueue;
 		std::mutex sendQueueMutex;
 		virtual void SendRun();
 		virtual void RecvRun();

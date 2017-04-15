@@ -9,11 +9,11 @@ namespace comser {
 	static const uint32_t STOP_BIT = 0;
 	static const uint32_t PARITY = 0;
 
-	static const uint32_t READ_INTERVAL_TIMEOUT = 50;
-	static const uint32_t READ_TOTAL_TIMEOUT = 50;
-	static const uint32_t READ_TOTAL_TIMEOUT_MULTIPLIER = 50;
-	static const uint32_t WRITE_TOTAL_TIMEOUT_CONSTANT = 50;
-	static const uint32_t WRITE_TOTAL_TIMEOUT_MULTIPLIER = 10;
+	static const uint32_t READ_INTERVAL_TIMEOUT = 1;
+	static const uint32_t READ_TOTAL_TIMEOUT = 1;
+	static const uint32_t READ_TOTAL_TIMEOUT_MULTIPLIER = 1;
+	static const uint32_t WRITE_TOTAL_TIMEOUT_CONSTANT = 1;
+	static const uint32_t WRITE_TOTAL_TIMEOUT_MULTIPLIER = 1;
 
 	class Serial
 	{
