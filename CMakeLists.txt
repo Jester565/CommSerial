@@ -43,6 +43,7 @@ set(CS_GLOB
 	${CS_HEADERS}
 	${CS_SOURCES})
 
+find_package(Threads)
 
 add_library(${COM_LIB_NAME} STATIC ${CS_GLOB})
 
@@ -51,6 +52,7 @@ set(TEST_SOURCES
 
 add_executable(${TEST_NAME} ${TEST_SOURCES})
 target_link_libraries(${TEST_NAME} ${COM_LIB_NAME})
+target_link_libraries(${TEST_NAME} ${COM_LIB_NAME} ${CMAKE_THREAD_LIBS_INIT})
 
 set_property(TARGET ${COM_LIB_NAME} ${TEST_NAME} PROPERTY CXX_STANDARD 11)
 set_property(TARGET ${COM_LIB_NAME} ${TEST_NAME} PROPERTY CXX_STANDARD_REQUIRED 11)

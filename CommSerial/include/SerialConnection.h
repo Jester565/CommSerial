@@ -16,7 +16,7 @@ namespace comser {
 	typedef std::function<void(int)> ErrHandler;
 	class SerialConnection {
 	public:
-		static const int RECV_SLEEP_MILLIS = 50;
+		static const int RECV_SLEEP_MILLIS;
 		SerialConnection();
 
 		virtual bool Start(const std::string& portName);

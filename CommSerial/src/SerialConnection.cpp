@@ -4,6 +4,8 @@
 #include <iostream>
 
 namespace comser {
+	const int SerialConnection::RECV_SLEEP_MILLIS = 50;
+
 	SerialConnection::SerialConnection()
 		:recvThread(nullptr), sendThread(nullptr), recvHandler(nullptr), errHandler(nullptr)
 	{
