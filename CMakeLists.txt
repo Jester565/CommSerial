@@ -11,8 +11,6 @@ include_directories(SYSTEM ${HEADER_DIR})
 set(CS_HEADERS
 	${HEADER_DIR}/Parser.h
 	${HEADER_DIR}/Serial.h
-	${HEADER_DIR}/WinSerial.h
-	${HEADER_DIR}/LinSerial.h
 	${HEADER_DIR}/SerialConnection.h
 	${HEADER_DIR}/ConditionVariable.h)
 	
