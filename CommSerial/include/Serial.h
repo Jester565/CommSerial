@@ -18,6 +18,8 @@ namespace comser {
 	class Serial
 	{
 	public:
+		static Serial* CreateSerial();
+
 		Serial()
 			:open(false)
 		{
@@ -29,15 +31,28 @@ namespace comser {
 
 		virtual int Read(uint8_t* data, uint16_t maxSize) = 0;
 
-		virtual int Read(uint8_t* data, uint16_t maxSize, uint16_t& size) = 0;
+		virtual int Read(uint8_t* data, uint16_t maxSize, uint16_t& size) {
+			int rVal = Read(data, maxSize);
+			if (rVal <= 0) {
+				return rVal;
+			}
+			else
+			{
+				size = rVal;
+				return 1;
+			}
+		}
 
 		virtual bool IsOpen() {
 			return open;
+
 		}
 
 		virtual bool Close() = 0;
 
-		virtual ~Serial() { }
+		virtual ~Serial() { 
+
+		}
 
 	protected:
 		bool open;

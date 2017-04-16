@@ -1,8 +1,6 @@
 #include "SerialConnection.h"
 #include "Parser.h"
-#ifdef _WIN32
-#include "WinSerial.h"
-#endif
+#include "Serial.h"
 #include <iostream>
 
 namespace comser {
@@ -10,11 +8,7 @@ namespace comser {
 		:recvThread(nullptr), sendThread(nullptr), recvHandler(nullptr), errHandler(nullptr)
 	{
 		errHandler = std::bind(&SerialConnection::DefaultErrHandler, this, std::placeholders::_1);
-#ifdef _WIN32
-		serial = new WinSerial();
-#else
-		std::cerr << "Linux/Unix not supported yet..." << std::endl;
-#endif
+		serial = Serial::CreateSerial();
 		parser = new Parser();
 	}
 
@@ -45,6 +39,10 @@ namespace comser {
 		recvThread = nullptr;
 		delete sendThread;
 		sendThread = nullptr;
+		delete serial;
+		serial = nullptr;
+		delete parser;
+		parser = nullptr;
 	}
 
 	void SerialConnection::Send(const std::string& data)

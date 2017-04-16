@@ -14,7 +14,7 @@ namespace comser {
 
 	typedef std::function<void(std::string)> RecvHandler;
 	typedef std::function<void(int)> ErrHandler;
-	class SerialConnection : public std::enable_shared_from_this<SerialConnection> {
+	class SerialConnection {
 	public:
 		static const int RECV_SLEEP_MILLIS = 50;
 		SerialConnection();

@@ -12,8 +12,8 @@ namespace comser {
 	{
 	public:
 		static const char TERMINUS = ';';
-		static const uint16_t MAX_RECV_SIZE = 15;
-		static const uint16_t BUFFER_MOVE_SIZE = 10;
+		static const uint16_t MAX_RECV_SIZE = 200;
+		static const uint16_t BUFFER_MOVE_SIZE = 150;
 
 		Parser();
 
