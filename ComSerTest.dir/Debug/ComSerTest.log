@@ -1,0 +1,5 @@
+﻿  Building Custom Rule C:/Users/ajcra/Desktop/NGCP/CommSerial/CMakeLists.txt
+  CMake does not need to re-run because C:/Users/ajcra/Desktop/NGCP/CommSerial/build/CMakeFiles/generate.stamp is up-to-date.
+  Source.cpp
+C:\Users\ajcra\Desktop\NGCP\CommSerial\Test\Source.cpp(11): warning C4018: '<': signed/unsigned mismatch
+  ComSerTest.vcxproj -> C:\Users\ajcra\Desktop\NGCP\CommSerial\build\Debug\ComSerTest.exe
