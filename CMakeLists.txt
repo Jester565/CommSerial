@@ -30,15 +30,6 @@ set(CS_SOURCES
 	${SOURCE_DIR}/LinSerial.cpp
 	${SOURCE_DIR}/SerialConnection.cpp)
 	
-if (WIN32)
-	if (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
-		add_definitions(-DPAUSE)
-		source_group("Header" FILES ${CS_HEADERS})
-		source_group("Source" FILES ${CS_SOURCES})
-		set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${PROJECT_NAME})
-	endif()
-endif()
-
 set(CS_GLOB
 	${CS_HEADERS}
 	${CS_SOURCES})
