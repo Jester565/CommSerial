@@ -39,11 +39,34 @@ namespace comser {
 			config.c_lflag &= ~(ECHO | ECHONL | ICANON | IEXTEN | ISIG);  //lflag: local modes - disables printing status of buffer
 			config.c_cflag &= ~(CSIZE | PARENB);  //cflag: control modes - clears the current byte size so that when we or the 8 bit version, we don't get leftover bits
 			config.c_cflag |= CS8;  //sets byte size to 8 bits
-			
-			
 			config.c_cc[VMIN] = 1;  //cc: special characters - The minimum amount of bytes to return from read, set to 1 (read does not block)
 			config.c_cc[VTIME] = 5;  //.5 seconds before read timesout
 			
+			switch (baudrate) {
+			case 0:      { baudrate = B0;      break; }
+			case 50:     { baudrate = B50;     break; }
+			case 75:     { baudrate = B75;     break; } 
+			case 110:    { baudrate = B110;    break; }
+			case 134:    { baudrate = B134;    break; }
+			case 150:    { baudrate = B150;    break; }
+			case 200:    { baudrate = B200;    break; }
+			case 300:    { baudrate = B300;    break; }
+			case 600:    { baudrate = B600;    break; }
+			case 1200:   { baudrate = B1200;   break; }
+			case 1800:   { baudrate = B1800;   break; }
+			case 2400:   { baudrate = B2400;   break; }
+			case 4800:   { baudrate = B4800;   break; }
+			case 9600:   { baudrate = B9600;   break; }
+			case 19200:  { baudrate = B19200;  break; }
+			case 38400:  { baudrate = B38400;  break; }
+			case 57600:  { baudrate = B57600;  break; }
+			case 115200: { baudrate = B115200; break; }
+			default: {
+				std::cerr << "Baudrate was not standard... using 115200";
+				baudrate = B115200;
+			}
+    		}
+			std::cout << (speed_t)baudrate << std::endl;
 			//set input and output baudrate
 			if (cfsetispeed(&config, (speed_t)baudrate) < 0 || cfsetospeed(&config, (speed_t)baudrate) < 0) {
 				std::cerr << "Could not set baudrate" << std::endl;

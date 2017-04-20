@@ -17,12 +17,12 @@ void RHandler(std::string data) {
 int main() {
 	SerialConnection serCon1;
 	serCon1.SetRecvHandler(&RHandler);
-	if (!serCon1.Start("COM5", 38400)) {
+	if (!serCon1.Start("/dev/ttyS10", 38400)) {
 		return 1;
 	}
 	SerialConnection serCon2;
 	serCon2.SetRecvHandler(&RHandler);
-	if (!serCon2.Start("COM6", 38400)) {
+	if (!serCon2.Start("/dev/ttyS11", 38400)) {
 		return 1;
 	}
 	
