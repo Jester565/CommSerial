@@ -14,9 +14,9 @@ namespace comser {
 		parser = new Parser();
 	}
 
-	bool SerialConnection::Start(const std::string & portName)
+	bool SerialConnection::Start(const std::string & portName, uint32_t baudrate)
 	{
-		if (!serial->Open(portName)) {
+		if (!serial->Open(portName, baudrate)) {
 			std::cerr << "Failed to open serial" << std::endl;
 			return false;
 		}

@@ -11,7 +11,7 @@ namespace comser {
 		{
 		}
 
-		bool Open(const std::string& portName) override
+		bool Open(const std::string& portName, uint32_t baudrate) override
 		{
 			hComm = CreateFile(("\\\\.\\" + portName).c_str(), GENERIC_READ | GENERIC_WRITE,
 				0, 0, OPEN_EXISTING, 0, 0);
@@ -24,7 +24,7 @@ namespace comser {
 			DCB serialParams = { 0 };
 			serialParams.DCBlength = sizeof(serialParams);
 			GetCommState(hComm, &serialParams);
-			serialParams.BaudRate = BAUDRATE;
+			serialParams.BaudRate = baudrate;
 			serialParams.ByteSize = BYTE_SIZE;
 			serialParams.StopBits = STOP_BIT;
 			serialParams.Parity = PARITY;

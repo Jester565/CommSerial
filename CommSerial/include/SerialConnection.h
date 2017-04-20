@@ -12,6 +12,8 @@ namespace comser {
 	class Serial;
 	class Parser;
 
+	static const uint32_t BAUDRATE = 57600;
+
 	typedef std::function<void(std::string)> RecvHandler;
 	typedef std::function<void(int)> ErrHandler;
 	class SerialConnection {
@@ -19,7 +21,7 @@ namespace comser {
 		static const int RECV_SLEEP_MILLIS;
 		SerialConnection();
 
-		virtual bool Start(const std::string& portName);
+		virtual bool Start(const std::string& portName, uint32_t baudrate = BAUDRATE);
 
 		void SetRecvHandler(const RecvHandler& recvHandler) {
 			this->recvHandler = recvHandler;

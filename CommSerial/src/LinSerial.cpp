@@ -10,7 +10,7 @@
 
 namespace comser {
 	class LinSerial : public Serial {
-		bool Open(const std::string & portName) override
+		bool Open(const std::string & portName, uint32_t baudrate) override
 		{
 			//open the file to the specified port
 			fileDescriptor = ::open(portName.c_str(), O_RDWR | O_NOCTTY);
@@ -45,7 +45,7 @@ namespace comser {
 			config.c_cc[VTIME] = 5;  //.5 seconds before read timesout
 			
 			//set input and output baudrate
-			if (cfsetispeed(&config, B9600) < 0 || cfsetospeed(&config, B9600) < 0) {
+			if (cfsetispeed(&config, (speed_t)baudrate) < 0 || cfsetospeed(&config, (speed_t)baudrate) < 0) {
 				std::cerr << "Could not set baudrate" << std::endl;
 				Close();
 				return false;

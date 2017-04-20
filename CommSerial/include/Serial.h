@@ -4,7 +4,6 @@
 
 namespace comser {
 
-	static const uint32_t BAUDRATE = 57600;
 	static const uint32_t BYTE_SIZE = 8;
 	static const uint32_t STOP_BIT = 0;
 	static const uint32_t PARITY = 0;
@@ -25,7 +24,7 @@ namespace comser {
 		{
 
 		}
-		virtual bool Open(const std::string& portName) = 0;
+		virtual bool Open(const std::string& portName, uint32_t baudrate) = 0;
 
 		virtual int Write(const uint8_t* data, uint16_t size) = 0;
 
