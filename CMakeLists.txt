@@ -22,13 +22,18 @@ set(CS_HEADERS
 	${HEADER_DIR}/Parser.h
 	${HEADER_DIR}/Serial.h
 	${HEADER_DIR}/SerialConnection.h
-	${HEADER_DIR}/ConditionVariable.h)
+	${HEADER_DIR}/ConditionVariable.h
+	${HEADER_DIR}/Crc.h
+	${HEADER_DIR}/ObjStream.h
+	${HEADER_DIR}/stdafx.h)
 	
 set(CS_SOURCES
 	${SOURCE_DIR}/Parser.cpp
 	${SOURCE_DIR}/WinSerial.cpp
 	${SOURCE_DIR}/LinSerial.cpp
-	${SOURCE_DIR}/SerialConnection.cpp)
+	${SOURCE_DIR}/SerialConnection.cpp
+	${SOURCE_DIR}/Crc.cpp
+	${SOURCE_DIR}/ObjStream.cpp)
 	
 set(CS_GLOB
 	${CS_HEADERS}

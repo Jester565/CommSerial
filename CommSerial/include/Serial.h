@@ -1,4 +1,5 @@
 #pragma once
+#include "stdafx.h"
 #include <string>
 #include <vector>
 
@@ -22,7 +23,7 @@ namespace comser {
 		Serial()
 			:open(false)
 		{
-
+			
 		}
 		virtual bool Open(const std::string& portName, uint32_t baudrate) = 0;
 

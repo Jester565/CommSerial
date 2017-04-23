@@ -1,17 +1,17 @@
 #include <iostream>
 #include <string>
 #include <thread>
+#include "ObjStream.h"
 #include "SerialConnection.h"
 
 using namespace comser;
 
 static const int MAX_IN_SIZE = 50;
 
-void RHandler(std::string data) {
-	for (int i = 0; i < data.size(); i++) {
-		std::cout << data.at(i);
-	}
-	std::cout << std::endl;
+void RHandler(std::shared_ptr<ObjStream> data) {
+	std::string str;
+	*data >> str;
+	std::cout << str << std::endl;
 }
 
 int main() {
@@ -30,7 +30,9 @@ int main() {
 		std::cout << "Input: ";
 		std::string userInput;
 		if (std::getline(std::cin, userInput)) {
-			serCon1.Send(userInput);
+			std::shared_ptr<ObjStream> sendData = std::make_shared<ObjStream>();
+			*sendData << userInput;
+			serCon1.Send(sendData);
 			std::this_thread::sleep_for(std::chrono::milliseconds(500));
 		}
 		else

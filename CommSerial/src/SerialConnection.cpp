@@ -1,4 +1,5 @@
 #include "SerialConnection.h"
+#include "ObjStream.h"
 #include "Parser.h"
 #include "Serial.h"
 #include <iostream>
@@ -47,7 +48,7 @@ namespace comser {
 		parser = nullptr;
 	}
 
-	void SerialConnection::Send(const std::string& data)
+	void SerialConnection::Send(std::shared_ptr<ObjStream> data)
 	{
 		sendQueueMutex.lock();
 		sendQueue.push(data);
@@ -63,19 +64,19 @@ namespace comser {
 	void SerialConnection::SendRun()
 	{
 		while (running) {
-			std::string data;
+			std::shared_ptr<ObjStream> sendData;
 			bool send = false;
 			bool empty = true;
 			sendQueueMutex.lock();
 			if (!sendQueue.empty()) {
-				data = sendQueue.front();
+				sendData = sendQueue.front();
 				sendQueue.pop();
 				send = true;
 				empty = sendQueue.empty();
 			}
 			sendQueueMutex.unlock();
 			if (send) {
-				int writeVal = parser->Write(serial, data);
+				int writeVal = parser->Write(serial, sendData);
 				if (writeVal < 0) {
 					errHandler(writeVal);
 				}
@@ -90,13 +91,13 @@ namespace comser {
 	void SerialConnection::RecvRun()
 	{
 		while (running) {
-			std::string data;
-			int readVal = parser->Read(serial, data);
+			std::shared_ptr<ObjStream> recvData = std::make_shared<ObjStream>();
+			int readVal = parser->Read(serial, recvData);
 			if (readVal < 0) {
 				errHandler(readVal);
 			}
 			else if (readVal > 0) {
-				recvHandler(data);
+				recvHandler(recvData);
 			}
 			recvCondVar.Wait(std::chrono::milliseconds(RECV_SLEEP_MILLIS));
 		}

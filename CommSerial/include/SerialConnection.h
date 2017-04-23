@@ -1,4 +1,6 @@
 #pragma once
+#include "stdafx.h"
+#include "ConditionVariable.h"
 #include <string>
 #include <functional>
 #include <thread>
@@ -6,15 +8,15 @@
 #include <vector>
 #include <mutex>
 #include <queue>
-#include "ConditionVariable.h"
 
 namespace comser {
 	class Serial;
 	class Parser;
+	class ObjStream;
 
 	static const uint32_t BAUDRATE = 57600;
 
-	typedef std::function<void(std::string)> RecvHandler;
+	typedef std::function<void(std::shared_ptr<ObjStream>)> RecvHandler;
 	typedef std::function<void(int)> ErrHandler;
 	class SerialConnection {
 	public:
@@ -31,15 +33,23 @@ namespace comser {
 			this->errHandler = errHandler;
 		}
 
-		void Send(const std::string& data);
+		void Send(std::shared_ptr<ObjStream> data);
 
 		void DefaultErrHandler(int err);
+
+		Parser* GetParser() {
+			return parser;
+		}
+
+		Serial* GetSerial() {
+			return serial;
+		}
 
 		virtual ~SerialConnection();
 	protected:
 		Serial* serial;
 		Parser* parser;
-		std::queue<std::string> sendQueue;
+		std::queue<std::shared_ptr<ObjStream>> sendQueue;
 		std::mutex sendQueueMutex;
 		virtual void SendRun();
 		virtual void RecvRun();
