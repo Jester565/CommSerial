@@ -1,6 +1,8 @@
 #pragma once
 #include "stdafx.h"
 #include <vector>
+#include <algorithm>
+#include <cstring>
 #include <iostream>
 
 namespace comser {
