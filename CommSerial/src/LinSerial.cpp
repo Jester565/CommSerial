@@ -66,7 +66,7 @@ namespace comser {
 				baudrate = B115200;
 			}
     		}
-			std::cout << (speed_t)baudrate << std::endl;
+			
 			//set input and output baudrate
 			if (cfsetispeed(&config, (speed_t)baudrate) < 0 || cfsetospeed(&config, (speed_t)baudrate) < 0) {
 				std::cerr << "Could not set baudrate" << std::endl;
