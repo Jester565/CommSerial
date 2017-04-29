@@ -24,9 +24,9 @@ namespace comser {
 
 		Parser();
 
-		int Write(Serial*, std::shared_ptr<ObjStream> data);
+		int Write(Serial*, uint8_t id, std::shared_ptr<ObjStream> data);
 
-		int Read(Serial*, std::shared_ptr<ObjStream> data);
+		int Read(Serial*, uint8_t& id, std::shared_ptr<ObjStream> data);
 
 		void SetSendPrefix(const std::string& prefix) {
 			this->prefix = new std::vector<uint8_t>(prefix.begin(), prefix.end());

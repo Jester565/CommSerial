@@ -12,11 +12,13 @@
 namespace comser {
 	class Serial;
 	class Parser;
+	class PackManager;
+	class Packet;
 	class ObjStream;
 
 	static const uint32_t BAUDRATE = 57600;
 
-	typedef std::function<void(std::shared_ptr<ObjStream>)> RecvHandler;
+	typedef std::function<void(uint8_t, std::shared_ptr<ObjStream>)> RecvHandler;
 	typedef std::function<void(int)> ErrHandler;
 	class SerialConnection {
 	public:
@@ -33,7 +35,7 @@ namespace comser {
 			this->errHandler = errHandler;
 		}
 
-		void Send(std::shared_ptr<ObjStream> data);
+		void Send(std::shared_ptr<Packet> data);
 
 		void DefaultErrHandler(int err);
 
@@ -45,11 +47,16 @@ namespace comser {
 			return serial;
 		}
 
+		PackManager* GetPackManager() {
+			return packManager;
+		}
+
 		virtual ~SerialConnection();
 	protected:
 		Serial* serial;
 		Parser* parser;
-		std::queue<std::shared_ptr<ObjStream>> sendQueue;
+		PackManager* packManager;
+		std::queue<std::shared_ptr<Packet>> sendQueue;
 		std::mutex sendQueueMutex;
 		virtual void SendRun();
 		virtual void RecvRun();

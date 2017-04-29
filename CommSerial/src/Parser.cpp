@@ -27,25 +27,20 @@ namespace comser {
 		crc = new Crc();
 	}
 
-	int Parser::Write(Serial* serial, std::shared_ptr<ObjStream> data)
+	int Parser::Write(Serial* serial, uint8_t id, std::shared_ptr<ObjStream> data)
 	{
 		uint16_t payloadSize = data->buffer.size();
 		CrcInt dataCRC = crc->GenCRC(data->buffer.data(), payloadSize);		
+		sendHeaderBuffer[SIZE_BYTE_POS] = (payloadSize & 0xFF) + 'A';
 		if (littleEndian) {
-			for (int i = 0; i < SIZE_BYTES; i++) {
-				sendHeaderBuffer[SIZE_BYTES - i - 1] = (payloadSize >> (8 * i)) & 0xff;
-			}
 			for (int i = 0; i < CRC_BYTES; i++) {
 				sendHeaderBuffer[HEADER_BYTES - i - 1] = ((dataCRC) >> (8 * i)) & 0xff;
 			}
 		}
 		else
 		{
-			for (int i = 0; i < SIZE_BYTES; i++) {
-				sendHeaderBuffer[i] = (payloadSize >> (8 * i)) & 0xff;
-			}
 			for (int i = 0; i < CRC_WIDTH; i++) {
-				sendHeaderBuffer[i + SIZE_BYTES] = ((dataCRC) >> (8 * i)) & 0xff;
+				sendHeaderBuffer[i + CRC_BYTE_POS] = ((dataCRC) >> (8 * i)) & 0xff;
 			}
 		}
 		int writeStatus;
@@ -76,7 +71,7 @@ namespace comser {
 		return 1;
 	}
 
-	int Parser::Read(Serial* serial, std::shared_ptr<ObjStream> data)
+	int Parser::Read(Serial* serial, uint8_t& id, std::shared_ptr<ObjStream> data)
 	{
 		if (startKeyI < START_KEY_BYTES) {
 			int readStatus = CheckStartKey(serial);
@@ -154,13 +149,13 @@ namespace comser {
 		SizeInt totalDataSize = 0;
 		if (littleEndian) {
 			for (int i = 0; i < SIZE_BYTES; i++) {
-				totalDataSize |= (recvBuffer[SIZE_BYTE_POS + SIZE_BYTES - i - 1] & 0xff) << (8 * i);
+				totalDataSize |= (recvBuffer[SIZE_BYTE_POS + SIZE_BYTES - i - 1] & 0xff) << (8 * i) - 'A';
 			}
 		}
 		else
 		{
 			for (int i = 0; i < SIZE_BYTES; i++) {
-				totalDataSize |= (recvBuffer[SIZE_BYTE_POS + i] & 0xff) << (8 * i);
+				totalDataSize |= (recvBuffer[SIZE_BYTE_POS + i] & 0xff) << (8 * i) - 'A';
 			}
 		}
 		return totalDataSize;

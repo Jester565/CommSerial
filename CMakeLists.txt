@@ -25,6 +25,9 @@ set(CS_HEADERS
 	${HEADER_DIR}/ConditionVariable.h
 	${HEADER_DIR}/Crc.h
 	${HEADER_DIR}/ObjStream.h
+	${HEADER_DIR}/Base32.h
+	${HEADER_DIR}/Pack.h
+	${HEADER_DIR}/PackManager.h
 	${HEADER_DIR}/stdafx.h)
 	
 set(CS_SOURCES
@@ -33,6 +36,9 @@ set(CS_SOURCES
 	${SOURCE_DIR}/LinSerial.cpp
 	${SOURCE_DIR}/SerialConnection.cpp
 	${SOURCE_DIR}/Crc.cpp
+	${SOURCE_DIR}/Base32.cpp
+	${SOURCE_DIR}/Pack.cpp
+	${SOURCE_DIR}/PackManager.cpp
 	${SOURCE_DIR}/ObjStream.cpp)
 	
 set(CS_GLOB
@@ -43,10 +49,14 @@ find_package(Threads)
 
 add_library(${COM_LIB_NAME} STATIC ${CS_GLOB})
 
-set(TEST_SOURCES
-	${CMAKE_CURRENT_SOURCE_DIR}/Test/Source.cpp)
+set(TEST_HEADERS
+	${CMAKE_CURRENT_SOURCE_DIR}/Test/TestPack.h)
 
-add_executable(${TEST_NAME} ${TEST_SOURCES})
+set(TEST_SOURCES
+	${CMAKE_CURRENT_SOURCE_DIR}/Test/Source.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Test/TestPack.cpp)
+
+add_executable(${TEST_NAME} ${TEST_HEADERS} ${TEST_SOURCES})
 target_link_libraries(${TEST_NAME} ${COM_LIB_NAME})
 target_link_libraries(${TEST_NAME} ${COM_LIB_NAME} ${CMAKE_THREAD_LIBS_INIT})
 

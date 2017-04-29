@@ -2,6 +2,8 @@
 #include "ObjStream.h"
 #include "Parser.h"
 #include "Serial.h"
+#include "Packet.h"
+#include "PackManager.h"
 #include <iostream>
 
 namespace comser {
@@ -13,6 +15,7 @@ namespace comser {
 		errHandler = std::bind(&SerialConnection::DefaultErrHandler, this, std::placeholders::_1);
 		serial = Serial::CreateSerial();
 		parser = new Parser();
+		packManager = new PackManager();
 	}
 
 	bool SerialConnection::Start(const std::string & portName, uint32_t baudrate)
@@ -46,9 +49,11 @@ namespace comser {
 		serial = nullptr;
 		delete parser;
 		parser = nullptr;
+		delete packManager;
+		packManager = nullptr;
 	}
 
-	void SerialConnection::Send(std::shared_ptr<ObjStream> data)
+	void SerialConnection::Send(std::shared_ptr<Packet> data)
 	{
 		sendQueueMutex.lock();
 		sendQueue.push(data);
@@ -64,19 +69,21 @@ namespace comser {
 	void SerialConnection::SendRun()
 	{
 		while (running) {
-			std::shared_ptr<ObjStream> sendData;
+			std::shared_ptr<Packet> sendPack;
 			bool send = false;
 			bool empty = true;
 			sendQueueMutex.lock();
 			if (!sendQueue.empty()) {
-				sendData = sendQueue.front();
+				sendPack = sendQueue.front();
 				sendQueue.pop();
 				send = true;
 				empty = sendQueue.empty();
 			}
 			sendQueueMutex.unlock();
 			if (send) {
-				int writeVal = parser->Write(serial, sendData);
+				std::shared_ptr<ObjStream> sendStream = std::make_shared<ObjStream>();
+				sendPack->Unpack(sendStream);
+				int writeVal = parser->Write(serial, sendPack->GetID(), sendStream);
 				if (writeVal < 0) {
 					errHandler(writeVal);
 				}
@@ -92,12 +99,13 @@ namespace comser {
 	{
 		while (running) {
 			std::shared_ptr<ObjStream> recvData = std::make_shared<ObjStream>();
-			int readVal = parser->Read(serial, recvData);
+			uint8_t id = 0;
+			int readVal = parser->Read(serial, id, recvData);
 			if (readVal < 0) {
 				errHandler(readVal);
 			}
 			else if (readVal > 0) {
-				recvHandler(recvData);
+				recvHandler(id, recvData);
 			}
 			recvCondVar.Wait(std::chrono::milliseconds(RECV_SLEEP_MILLIS));
 		}
