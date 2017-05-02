@@ -37,6 +37,8 @@ namespace comser {
 
 		void Send(std::shared_ptr<Packet> data);
 
+		void DefaultRecvHandler(uint8_t id, std::shared_ptr<ObjStream> stream);
+
 		void DefaultErrHandler(int err);
 
 		Parser* GetParser() {

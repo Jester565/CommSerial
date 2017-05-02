@@ -1,5 +1,5 @@
 #include "ObjStream.h"
-
+#include <iterator>
 
 namespace comser {
 	ObjStream::ObjStream()
@@ -7,6 +7,13 @@ namespace comser {
 	{
 		int num = 1;
 		littleEndian = (*(char *)&num == 1);
+	}
+
+
+	ObjStream::ObjStream(std::vector<uint8_t>::iterator begin, std::vector<uint8_t>::iterator end)
+		: ObjStream()
+	{
+		buffer.insert(buffer.end(), begin, end);
 	}
 
 	ObjStream & ObjStream::operator<<(int8_t data)

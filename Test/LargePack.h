@@ -1,8 +1,8 @@
 #include <Packet.h>
 
-class TestPack : public comser::Packet{
+class LargePack : public comser::Packet {
 public:
-	TestPack();
+	LargePack();
 
 	void Pack(std::shared_ptr<comser::ObjStream> out) override;
 
@@ -10,6 +10,7 @@ public:
 
 	std::shared_ptr<comser::Packet> Create() override;
 
-	int num1;
-	float num2;
+	uint32_t longitude;
+	uint32_t latitude;
+	uint32_t altitude;
 };

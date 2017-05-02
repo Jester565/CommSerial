@@ -16,7 +16,9 @@ namespace comser {
 		
 		void RunCallback(uint8_t id, std::shared_ptr<ObjStream> in);
 
-		void LinkCallback(uint8_t id, Packet* packet, PacketCallback callback);
+		void LinkCallback(Packet* packet, PacketCallback callback);
+
+		bool GetPackSize(uint8_t id, uint8_t& size);
 
 	private:
 		std::unordered_map<uint8_t, std::pair<Packet*, PacketCallback>> callbacks;

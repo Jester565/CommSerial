@@ -8,13 +8,17 @@ namespace comser {
 	class Serial;
 	class Crc;
 	class ObjStream;
+	class Packet;
+	class Base32;
+	class PackManager;
 	typedef uint8_t SizeInt;
 
 	class Parser
 	{
 	public:
 
-		static const uint8_t* START_KEY;
+		static const uint8_t START_KEY[];
+		static const uint8_t START_KEY_MASK[];
 		static const uint8_t START_KEY_BYTES;
 		static const uint8_t SIZE_BYTE_POS;
 		static const uint8_t SIZE_BYTES;
@@ -24,9 +28,9 @@ namespace comser {
 
 		Parser();
 
-		int Write(Serial*, uint8_t id, std::shared_ptr<ObjStream> data);
+		int Write(Serial*, std::shared_ptr<Packet> pack);
 
-		int Read(Serial*, uint8_t& id, std::shared_ptr<ObjStream> data);
+		int Read(Serial* serial, uint8_t& hID, std::shared_ptr<ObjStream>& stream, PackManager* packManager);
 
 		void SetSendPrefix(const std::string& prefix) {
 			this->prefix = new std::vector<uint8_t>(prefix.begin(), prefix.end());
@@ -42,16 +46,19 @@ namespace comser {
 		int CheckStartKey(Serial* serial);
 		int ReadSize(Serial* serial);
 		SizeInt GetDataSize();
-		int ProcessPayload(std::vector<uint8_t>& data, SizeInt payloadSize);
-		bool CheckCrc();
+		/*
+		int ProcessPayload(bool maxSize, uint8_t hID, std::shared_ptr<Packet>& pack);
+		bool CheckCrc(bool maxSize, uint8_t hID);
+		*/
 		void ResetSizes() {
 			recvBufferSize = 0;
 			startKeyI = 0;
 		}
 		SizeInt recvBufferSize;
 		uint8_t* recvBuffer;
-		uint8_t* sendHeaderBuffer;
 		uint8_t startKeyI;
+		uint8_t lastKeyByte;
+		Base32* base32Converter;
 		Crc* crc;
 		bool littleEndian;
 

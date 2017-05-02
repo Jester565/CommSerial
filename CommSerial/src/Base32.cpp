@@ -12,16 +12,13 @@ namespace comser {
 	{
 	}
 
-	void Base32::encode(std::vector<uint8_t>& in, std::vector<uint8_t>& out)
+	void Base32::Encode(std::vector<uint8_t>& in, std::vector<uint8_t>& out)
 	{
-		double outSize = in.size() * (8.0 / 5.0);
-		if (outSize > (int)outSize) {
-			outSize = ((int)outSize) + 1;
-		}
+		int outSize = Base256To32Size(in.size()) + out.size();
 		while (in.size() % 5 != 0) {
 			in.push_back(0);
 		}
-		out.reserve((int)(in.size() * (4.0 / 3.0)));
+		out.reserve(Base256To32Size(in.size()) + out.size());
 		for (int i = 0; i < in.size(); i += 5) {
 			out.push_back(ENCODE_ARR[in.at(i) & 0x1F]);
 			out.push_back(ENCODE_ARR[((in.at(i) & 0xE0) >> 5) | ((in.at(i + 1) & 0x03) << 3)]);
@@ -32,26 +29,35 @@ namespace comser {
 			out.push_back(ENCODE_ARR[((in.at(i + 3) & 0XC0) >> 6) | ((in.at(i + 4) & 0x07) << 2)]);
 			out.push_back(ENCODE_ARR[(in.at(i + 4) & 0xF8) >> 3]);
 		}
-		out.resize((int)outSize);
+		out.resize(outSize);
 	}
 
-	void Base32::decode(std::vector<uint8_t>& in, std::vector<uint8_t>& out)
+	void Base32::Decode(std::vector<uint8_t>& in, std::vector<uint8_t>& out)
 	{
-		int outSize = in.size() * (5.0 / 8.0);
+		int outSize = Base32To256Size(in.size()) + out.size();
 		while (in.size() % 8 != 0) {
 			in.push_back(0);
 		}
-		out.reserve(in.size() * (5.0 / 8.0));
+		out.reserve(Base32To256Size(in.size()) + out.size());
 		for (int i = 0; i < in.size(); i += 8) {
-			out.push_back((DECODE_ARR[in.at(i)] & 0x1F) | ((DECODE_ARR[in.at(i + 1)] & 0x03) << 5));
+			out.push_back((DECODE_ARR[in.at(i)] & 0x1F) | ((DECODE_ARR[in.at(i + 1)] & 0x07) << 5));
 			out.push_back(((DECODE_ARR[in.at(i + 1)] & 0x18) >> 3) | ((DECODE_ARR[in.at(i + 2)] & 0x1F) << 2) | ((DECODE_ARR[in.at(i + 3)] & 0x01) << 7));
 			out.push_back(((DECODE_ARR[in.at(i + 3)] & 0x1E) >> 1) | ((DECODE_ARR[in.at(i + 4)] & 0x0F) << 4));
 			out.push_back(((DECODE_ARR[in.at(i + 4)] & 0x10) >> 4) | ((DECODE_ARR[in.at(i + 5)] & 0x1F) << 1) | ((DECODE_ARR[in.at(i + 6)] & 0x03) << 6));
 			out.push_back(((DECODE_ARR[in.at(i + 6)] & 0x1C) >> 2) | ((DECODE_ARR[in.at(i + 7)] & 0x1F) << 3));
 		}
-		out.resize((int)outSize);
+		out.resize(outSize);
 	}
 
+	uint8_t Base32::EncodeByte(uint8_t byte)
+	{
+		return ENCODE_ARR[byte];
+	}
+
+	uint8_t Base32::DecodeByte(uint8_t byte)
+	{
+		return DECODE_ARR[byte];
+	}
 
 	Base32::~Base32()
 	{

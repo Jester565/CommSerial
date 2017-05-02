@@ -12,6 +12,7 @@ namespace comser {
 	SerialConnection::SerialConnection()
 		:recvThread(nullptr), sendThread(nullptr), recvHandler(nullptr), errHandler(nullptr)
 	{
+		recvHandler = std::bind(&SerialConnection::DefaultRecvHandler, this, std::placeholders::_1, std::placeholders::_2);
 		errHandler = std::bind(&SerialConnection::DefaultErrHandler, this, std::placeholders::_1);
 		serial = Serial::CreateSerial();
 		parser = new Parser();
@@ -61,6 +62,11 @@ namespace comser {
 		sendCondVar.Set();
 	}
 
+	void SerialConnection::DefaultRecvHandler(uint8_t id, std::shared_ptr<ObjStream> stream)
+	{
+		packManager->RunCallback(id, stream);
+	}
+
 	void SerialConnection::DefaultErrHandler(int err)
 	{
 		std::cerr << "AN ERROR OCCURED WITH CODE: " << err << std::endl;
@@ -81,9 +87,7 @@ namespace comser {
 			}
 			sendQueueMutex.unlock();
 			if (send) {
-				std::shared_ptr<ObjStream> sendStream = std::make_shared<ObjStream>();
-				sendPack->Unpack(sendStream);
-				int writeVal = parser->Write(serial, sendPack->GetID(), sendStream);
+				int writeVal = parser->Write(serial, sendPack);
 				if (writeVal < 0) {
 					errHandler(writeVal);
 				}
@@ -98,14 +102,14 @@ namespace comser {
 	void SerialConnection::RecvRun()
 	{
 		while (running) {
-			std::shared_ptr<ObjStream> recvData = std::make_shared<ObjStream>();
+			std::shared_ptr<ObjStream> packStream;
 			uint8_t id = 0;
-			int readVal = parser->Read(serial, id, recvData);
+			int readVal = parser->Read(serial, id, packStream, packManager);
 			if (readVal < 0) {
 				errHandler(readVal);
 			}
 			else if (readVal > 0) {
-				recvHandler(id, recvData);
+				recvHandler(id, packStream);
 			}
 			recvCondVar.Wait(std::chrono::milliseconds(RECV_SLEEP_MILLIS));
 		}

@@ -16,8 +16,17 @@ namespace comser {
 		}
 	}
 
-	void PackManager::LinkCallback(uint8_t id, Packet * packet, PacketCallback callback)
+	void PackManager::LinkCallback(Packet * packet, PacketCallback callback)
 	{
-		callbacks.emplace(std::make_pair(id, std::make_pair(packet, callback)));
+		callbacks.emplace(std::make_pair(packet->GetID(), std::make_pair(packet, callback)));
+	}
+	bool PackManager::GetPackSize(uint8_t id, uint8_t & size)
+	{
+		auto it = callbacks.find(id);
+		if (it != callbacks.end()) {
+			size = it->second.first->GetSize();
+			return true;
+		}
+		return false;
 	}
 }

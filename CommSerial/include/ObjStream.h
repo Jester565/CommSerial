@@ -13,6 +13,7 @@ namespace comser {
 		friend Parser;
 
 		ObjStream();
+		ObjStream(std::vector<uint8_t>::iterator begin, std::vector<uint8_t>::iterator end);
 
 		ObjStream& operator << (int8_t data);
 		ObjStream& operator << (uint8_t data);
@@ -37,6 +38,7 @@ namespace comser {
 		ObjStream& operator >> (float& data);
 		ObjStream& operator >> (double& data);
 		ObjStream& operator >> (std::string& data);
+
 	private:
 		bool littleEndian;
 		std::vector<uint8_t> buffer;

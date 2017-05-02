@@ -19,5 +19,5 @@ void TestPack::Unpack(std::shared_ptr<comser::ObjStream> in)
 
 std::shared_ptr<comser::Packet> TestPack::Create()
 {
-	return std::shared_ptr<TestPack>();
+	return std::make_shared<TestPack>();
 }
