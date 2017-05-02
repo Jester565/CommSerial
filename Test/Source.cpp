@@ -30,48 +30,22 @@ int main() {
 	if (!serCon1.Start("COM5", 38400)) {
 		return 1;
 	}
+	serCon1.GetParser()->SetSendPrefix("KYW");
+	serCon1.GetParser()->SetSendPostfix(";");
 	serCon1.GetPackManager()->LinkCallback(new TestPack(), &TestPackHandler);
 	serCon1.GetPackManager()->LinkCallback(new LargePack(), &LargePackHandler);
 
-	SerialConnection serCon2;
-	if (!serCon2.Start("COM6", 38400)) {
-		return 1;
-	}
-	serCon2.GetPackManager()->LinkCallback(new TestPack(), &TestPackHandler);
-	serCon2.GetPackManager()->LinkCallback(new LargePack(), &LargePackHandler);
-
 	while (true) {
-		std::cout << "Input: ";
-		std::string userInput;
-		if (std::getline(std::cin, userInput)) {
-			std::shared_ptr<TestPack> testPack = std::make_shared<TestPack>();
-			testPack->num1 = 100;
-			testPack->num2 = 12.14;
-			//serCon1.Send(testPack);
-			std::shared_ptr<LargePack> largePack = std::make_shared<LargePack>();
-			largePack->longitude = UINT32_MAX - 1;
-			largePack->latitude = UINT32_MAX - 2;
-			largePack->altitude = UINT32_MAX - 1000;
-			serCon1.Send(largePack);
-			std::this_thread::sleep_for(std::chrono::milliseconds(500));
-		}
-		else
-		{
-			std::cin.clear();
-			std::cin.ignore(std::numeric_limits<std::streamsize>::max());
-		}
+		std::cout << "Press enter to send" << std::endl;
+		std::cin.get();
+		std::shared_ptr<LargePack> largePack = std::make_shared<LargePack>();
+		largePack->longitude = 20;
+		largePack->latitude = 100;
+		largePack->altitude = 10342;
+		serCon1.Send(largePack);
+		std::cout << "SENT" << std::endl;
+		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	}
 	
 	system("pause");
 }
-
-/*
-SerialConnection serCon1;
-serCon1.SetRecvHandler(&RHandler);
-if (!serCon1.Start("COM3", 38400)) {
-return 1;
-}
-serCon1.GetParser()->SetSendPrefix("KYW");
-serCon1.GetParser()->SetSendPostfix(";");
-serCon1.GetSerial()->Write((const uint8_t*)"TT1;", 4);
-*/
