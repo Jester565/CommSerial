@@ -44,22 +44,22 @@ namespace comser {
 
 	private:
 		int CheckStartKey(Serial* serial);
+		int ReadHeader(Serial* serial, PackManager* packManager, bool isMaxSize, uint8_t& hID, uint8_t& dataSize, uint8_t& payloadStartI);
 		int ReadSize(Serial* serial);
-		SizeInt GetDataSize();
-		/*
-		int ProcessPayload(bool maxSize, uint8_t hID, std::shared_ptr<Packet>& pack);
-		bool CheckCrc(bool maxSize, uint8_t hID);
-		*/
+		int ReadMaxSizeHIDEnd(PackManager* packManager, uint8_t dataSize, uint8_t& hID);
 		void ResetSizes() {
 			recvBufferSize = 0;
 			startKeyI = 0;
 		}
-		SizeInt recvBufferSize;
 		uint8_t* recvBuffer;
+		SizeInt recvBufferSize;
+
 		uint8_t startKeyI;
 		uint8_t lastKeyByte;
+
 		Base32* base32Converter;
 		Crc* crc;
+
 		bool littleEndian;
 
 		std::vector<uint8_t>* prefix;

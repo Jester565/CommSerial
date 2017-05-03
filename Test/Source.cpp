@@ -37,7 +37,8 @@ int main() {
 
 	while (true) {
 		std::cout << "Press enter to send" << std::endl;
-		std::cin.get();
+		char c[100];
+		std::cin.getline(c, 100);
 		std::shared_ptr<LargePack> largePack = std::make_shared<LargePack>();
 		largePack->longitude = 20;
 		largePack->latitude = 100;
@@ -46,6 +47,4 @@ int main() {
 		std::cout << "SENT" << std::endl;
 		std::this_thread::sleep_for(std::chrono::milliseconds(500));
 	}
-	
-	system("pause");
 }
