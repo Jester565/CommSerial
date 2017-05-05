@@ -27,6 +27,10 @@ namespace comser {
 		}
 		virtual bool Open(const std::string& portName, uint32_t baudrate) = 0;
 
+		virtual int Write(const char* data, uint16_t size) {
+			return Write((const uint8_t*)data, size);
+		}
+
 		virtual int Write(const uint8_t* data, uint16_t size) = 0;
 
 		virtual int Read(uint8_t* data, uint16_t maxSize) = 0;
