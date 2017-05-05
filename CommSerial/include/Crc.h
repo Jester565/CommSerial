@@ -14,6 +14,7 @@ namespace comser {
 		}
 
 		CrcInt GenCRC(const uint8_t* data, uint32_t size) {
+			/*
 			CrcInt remainder = 0;
 			uint8_t curByte = 0;
 			for (int i = 0; i < size; i++) {
@@ -21,6 +22,8 @@ namespace comser {
 				remainder = precalcDivs[curByte] ^ (remainder << 8);
 			}
 			return remainder;
+			*/
+			return 0;
 		}
 
 	protected:

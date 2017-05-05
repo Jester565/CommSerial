@@ -53,12 +53,14 @@ add_library(${COM_LIB_NAME} STATIC ${CS_GLOB})
 
 set(TEST_HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/Test/TestPack.h
-	${CMAKE_CURRENT_SOURCE_DIR}/Test/LargePack.h)
+	${CMAKE_CURRENT_SOURCE_DIR}/Test/LargePack.h
+	${CMAKE_CURRENT_SOURCE_DIR}/Test/HamManager.h)
 
 set(TEST_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/Test/Source.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/Test/TestPack.cpp
-	${CMAKE_CURRENT_SOURCE_DIR}/Test/LargePack.cpp)
+	${CMAKE_CURRENT_SOURCE_DIR}/Test/LargePack.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/Test/HamManager.cpp)
 
 add_executable(${TEST_NAME} ${TEST_HEADERS} ${TEST_SOURCES})
 target_link_libraries(${TEST_NAME} ${COM_LIB_NAME})

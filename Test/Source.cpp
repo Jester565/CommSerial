@@ -28,11 +28,11 @@ void LargePackHandler(std::shared_ptr<Packet> pack) {
 
 int main() {
 	SerialConnection serCon1;
-	if (!serCon1.Start("COM5", 38400)) {
+	if (!serCon1.Start("COM7", 38400)) {
 		return 1;
 	}
 
-	serCon1.GetSerial()->Write("TT1", 3);
+	serCon1.GetSerial()->Write("TT1;", 4);
 	serCon1.GetParser()->SetSendPrefix("KYW");
 	serCon1.GetParser()->SetSendPostfix(";");
 	serCon1.GetPackManager()->LinkCallback(new TestPack(), &TestPackHandler);
