@@ -13,6 +13,10 @@ else()
   set (CMAKE_BUILD_TYPE Debug)
 endif()
 
+#hopefully linux just ignores this
+#sets default project to test soultion
+set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${TEST_NAME})
+
 set(HEADER_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}/include/)
 set(SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_NAME}/src/)
 
