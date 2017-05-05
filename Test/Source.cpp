@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <thread>
+#include "Serial.h"
 #include "TestPack.h"
 #include "LargePack.h"
 #include "ObjStream.h"
@@ -30,6 +31,8 @@ int main() {
 	if (!serCon1.Start("COM5", 38400)) {
 		return 1;
 	}
+
+	serCon1.GetSerial()->Write("TT1", 3);
 	serCon1.GetParser()->SetSendPrefix("KYW");
 	serCon1.GetParser()->SetSendPostfix(";");
 	serCon1.GetPackManager()->LinkCallback(new TestPack(), &TestPackHandler);
